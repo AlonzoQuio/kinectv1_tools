@@ -47,7 +47,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
         private void UpdateFolder() {
             string myPhotos = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-            string loaded_at = System.DateTime.Now.ToString("hhmmss", CultureInfo.CurrentUICulture.DateTimeFormat);
+            string loaded_at = System.DateTime.Now.ToString("HHmmss", CultureInfo.CurrentUICulture.DateTimeFormat);
             folder_path = Path.Combine(myPhotos, "KinectData", DateTime.Now.ToString("yyyy_MM_dd_")+loaded_at);
             //folder_path = Path.Combine(;
             if (Directory.Exists(folder_path))
@@ -93,8 +93,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 // Turn on the depth stream to receive depth frames
 
                 this.sensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-                //this.sensor.DepthStream.Enable(DepthImageFormat.Resolution80x60Fps30);
-                this.sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
+                this.sensor.ColorStream.Enable(ColorImageFormat.YuvResolution640x480Fps15);
+                //this.sensor.ColorStream.Enable(ColorImageFormat.RgbResolution1280x960Fps12);
 
                 // Allocate space to put the depth pixels we'll receive
                 this.depthPixels = new short[this.sensor.DepthStream.FramePixelDataLength];
@@ -156,6 +156,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 
                 if (depthFrame != null && recording && !readDepth)
                 {
+                    short max_value = 0;
+                    short min_value = 32767;
                     // Copy the pixel data from the image to a temporary array
                     depthFrame.CopyPixelDataTo(this.depthPixels);
 
@@ -163,9 +165,18 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                     for (int i = 0; i < this.depthPixels.Length; ++i){
                         // discard the portion of the depth that contains only the player index
                         short depth = (short)(this.depthPixels[i] >> DepthImageFrame.PlayerIndexBitmaskWidth);
-
-                        raw[i] = (ushort)depth;
-                        raw[i]++;
+                        //ushort depth = (depthPixels[i] >> 3);
+                        if (depth > max_value){
+                            max_value = depth;
+                        }
+                        if (depth < min_value){
+                            min_value = depth;
+                        }
+                        //raw[i] = depth;
+                        //raw[i] = (ushort)(i/10);
+                        //raw[i]++;
+                        raw[i] = (ushort)((depth+1)*10);
+                        
                     }
 
                     // Write the pixel data into our bitmap
@@ -181,6 +192,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                         0);
                     this.depthBitmap.Freeze();
                     readDepth = true;
+                    Console.WriteLine(min_value + " - " + max_value);
                 }
             }
         }

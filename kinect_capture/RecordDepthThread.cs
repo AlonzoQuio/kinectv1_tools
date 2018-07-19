@@ -39,7 +39,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                     //string myPhotos = "";// Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
                     //string path_d = Path.Combine("", loaded_at + "_" + frame_d + "_depth.png");
-                    string path_d = loaded_at + frame_d + "_depth.png";
+                    string path_d = loaded_at + "depth\\" + frame_d + ".png";
                     // write the new file to disk
                     try
                     {

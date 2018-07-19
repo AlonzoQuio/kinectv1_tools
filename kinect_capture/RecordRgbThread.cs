@@ -28,11 +28,12 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 {
                     // create a png bitmap encoder which knows how to save a .png file
                     BitmapEncoder encoder = new PngBitmapEncoder();
+                    //BitmapEncoder encoder = new BmpBitmapEncoder();
 
                     // create frame from the writable bitmap and add to encoder
                     encoder.Frames.Add(BitmapFrame.Create(window.colorBitmap_temp));
 
-                    string path = loaded_at + frame + "_rgb.png";
+                    string path = loaded_at + "rgb\\"+ frame + ".png";
                     // write the new file to disk
                     try
                     {

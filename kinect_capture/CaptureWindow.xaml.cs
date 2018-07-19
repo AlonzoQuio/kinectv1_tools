@@ -57,7 +57,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             }
             Console.WriteLine("Creating path " + folder_path);
             // Try to create the directory.
-            DirectoryInfo di = Directory.CreateDirectory(folder_path);
+            Directory.CreateDirectory(folder_path+"\\rgb");
+            Directory.CreateDirectory(folder_path + "\\depth");
             rgb_handler.UpdatePath(folder_path+"\\");
             depth_handler.UpdatePath(folder_path+"\\");
         }
